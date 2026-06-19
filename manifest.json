@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Claude Formatter",
+  "version": "1.0.0",
+  "description": "Improves claude.ai readability: wider layout, better typography and spacing.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://claude.ai/*"],
+      "css": ["content.css"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Claude Formatter"
+  }
+}

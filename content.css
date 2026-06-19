@@ -1,0 +1,4 @@
+/* Fallback layout rule — JS overrides this once storage loads */
+[class*="max-w-"] {
+  max-width: 900px !important;
+}
