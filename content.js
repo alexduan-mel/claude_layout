@@ -8,6 +8,7 @@ const DEFAULTS = {
 };
 
 const FONTS = {
+  "SF Pro":       { stack: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif' },
   "Georgia":      { stack: "Georgia, serif" },
   "Palatino":     { stack: "'Palatino Linotype', Palatino, serif" },
   "Verdana":      { stack: "Verdana, Geneva, sans-serif" },

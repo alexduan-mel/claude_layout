@@ -2,125 +2,363 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Claude Formatter</title>
+  <title>Claude Layout</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400&family=Merriweather:wght@400&family=Inter:wght@400&family=Literata:opsz,wght@7..72,400&display=swap" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Dark base (default) ── */
+    :root {
+      --bg:           #13131f;
+      --badge-bg:     #252540;
+      --input-bg:     #252540;
+      --border:       #35355a;
+      --track-fill:   #7c5fe6;
+      --track-empty:  #2e2e50;
+      --thumb:        #a58af5;
+      --accent:       #8b7fe8;
+      --accent-bright:#b8a8f8;
+      --dot:          #7c5fe6;
+      --text:         #ffffff;
+      --text-label:   #c5c2d8;
+      --text-muted:   #6b6890;
+      --hover-bg:     #2a2a48;
+      --hr:           #2a2a48;
+      --shadow:       rgba(0,0,0,0.55);
+    }
+
+    /* ── Light (system preference) ── */
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg:           #ffffff;
+        --badge-bg:     #ede8ff;
+        --input-bg:     #f5f3ff;
+        --border:       #d4ccf5;
+        --track-fill:   #7c4dff;
+        --track-empty:  #ddd8f5;
+        --thumb:        #7c4dff;
+        --accent:       #7c4dff;
+        --accent-bright:#7c4dff;
+        --dot:          #7c4dff;
+        --text:         #1a1a2e;
+        --text-label:   #4a4870;
+        --text-muted:   #9994b8;
+        --hover-bg:     #ede8ff;
+        --hr:           #e8e4f8;
+        --shadow:       rgba(0,0,0,0.1);
+      }
+    }
+
+    /* ── Manual dark override ── */
+    html[data-theme="dark"] {
+      --bg:           #13131f;
+      --badge-bg:     #252540;
+      --input-bg:     #252540;
+      --border:       #35355a;
+      --track-fill:   #7c5fe6;
+      --track-empty:  #2e2e50;
+      --thumb:        #a58af5;
+      --accent:       #8b7fe8;
+      --accent-bright:#b8a8f8;
+      --dot:          #7c5fe6;
+      --text:         #ffffff;
+      --text-label:   #c5c2d8;
+      --text-muted:   #6b6890;
+      --hover-bg:     #2a2a48;
+      --hr:           #2a2a48;
+      --shadow:       rgba(0,0,0,0.55);
+    }
+
+    /* ── Manual light override ── */
+    html[data-theme="light"] {
+      --bg:           #ffffff;
+      --badge-bg:     #ede8ff;
+      --input-bg:     #f5f3ff;
+      --border:       #d4ccf5;
+      --track-fill:   #7c4dff;
+      --track-empty:  #ddd8f5;
+      --thumb:        #7c4dff;
+      --accent:       #7c4dff;
+      --accent-bright:#7c4dff;
+      --dot:          #7c4dff;
+      --text:         #1a1a2e;
+      --text-label:   #4a4870;
+      --text-muted:   #9994b8;
+      --hover-bg:     #ede8ff;
+      --hr:           #e8e4f8;
+      --shadow:       rgba(0,0,0,0.1);
+    }
+
     body {
-      width: 280px;
-      padding: 16px;
-      font-family: system-ui, sans-serif;
-      font-size: 13px;
-      background: #1a1a2e;
-      color: #e0e0e0;
+      width: 340px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
     }
-    h2 {
-      font-size: 15px;
-      margin-bottom: 14px;
-      color: #c8a8f9;
-      letter-spacing: 0.03em;
-    }
-    .row {
+
+    /* ── Header ── */
+    header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
-    label { flex: 1; color: #bbb; }
-    .controls { display: flex; align-items: center; gap: 6px; }
-    input[type="range"] {
-      width: 110px;
-      accent-color: #c8a8f9;
+
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .val {
-      width: 36px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-      color: #e0e0e0;
-    }
-    hr { border: none; border-top: 1px solid #333; margin: 12px 0; }
-    button#reset {
-      width: 100%;
-      padding: 7px;
-      border: none;
-      border-radius: 6px;
-      background: #3a2f5a;
-      color: #c8a8f9;
+    .dot { color: var(--dot); font-size: 11px; }
+
+    #themeToggle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--badge-bg);
+      color: var(--accent);
       cursor: pointer;
       font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      line-height: 1;
     }
-    button#reset:hover { background: #4a3f6a; }
-    select {
-      background: #2a2a40;
-      color: #e0e0e0;
-      border: 1px solid #444;
-      border-radius: 5px;
-      padding: 3px 6px;
+    #themeToggle:hover { border-color: var(--accent); }
+
+    /* ── Section labels ── */
+    .section {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 18px 0 10px;
+    }
+
+    /* ── Rows ── */
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--badge-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 12px;
-      cursor: pointer;
-      max-width: 148px;
+      font-weight: 600;
+      color: var(--accent);
+      flex-shrink: 0;
     }
-    select:focus { outline: 1px solid #c8a8f9; }
+
+    .row > label {
+      width: 82px;
+      flex-shrink: 0;
+      color: var(--text-label);
+      font-size: 14px;
+    }
+
+    /* ── Sliders ── */
+    .slider-wrap { flex: 1; }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(
+        to right,
+        var(--track-fill) 0%,
+        var(--track-fill) var(--pct, 50%),
+        var(--track-empty) var(--pct, 50%),
+        var(--track-empty) 100%
+      );
+      cursor: pointer;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--thumb);
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+
+    .val {
+      width: 44px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+
+    /* ── Font picker ── */
+    .font-picker { flex: 1; position: relative; }
+
+    .fp-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: var(--text);
+      user-select: none;
+      font-size: 14px;
+    }
+    .fp-trigger:hover,
+    .fp-trigger.open { border-color: var(--accent); }
+
+    .fp-caret { color: var(--text-muted); font-size: 9px; margin-left: 4px; }
+
+    .fp-list {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 100;
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    .fp-list.open { display: block; }
+
+    .fp-group {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 8px 10px 3px;
+    }
+
+    .fp-option {
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-label);
+    }
+    .fp-option:hover { background: var(--hover-bg); color: var(--text); }
+    .fp-option.selected { color: var(--accent-bright); }
+
+    /* ── Footer ── */
+    hr { border: none; border-top: 1px solid var(--hr); margin: 18px 0 12px; }
+
+    #reset {
+      width: 100%;
+      padding: 9px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--accent-bright);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    #reset:hover { background: var(--hover-bg); }
   </style>
 </head>
 <body>
-  <h2>Claude Formatter</h2>
+  <header>
+    <h2><span class="dot">●</span> Claude Layout</h2>
+    <button id="themeToggle" title="Toggle theme"></button>
+  </header>
+
+  <div class="section">Layout</div>
 
   <div class="row">
-    <label>Font</label>
-    <select id="fontFamily">
-      <option value="">Site default</option>
-      <optgroup label="System">
-        <option value="Georgia">Georgia</option>
-        <option value="Palatino">Palatino</option>
-        <option value="Verdana">Verdana</option>
-      </optgroup>
-      <optgroup label="Google Fonts">
-        <option value="Lora">Lora</option>
-        <option value="Merriweather">Merriweather</option>
-        <option value="Inter">Inter</option>
-        <option value="Literata">Literata</option>
-      </optgroup>
-    </select>
-  </div>
-
-  <div class="row">
-    <label>Content width</label>
-    <div class="controls">
+    <div class="badge">↔</div>
+    <label>Width</label>
+    <div class="slider-wrap">
       <input type="range" id="contentWidth" min="600" max="1400" step="20" />
-      <span class="val" id="contentWidthVal"></span>
+    </div>
+    <span class="val" id="contentWidthVal"></span>
+  </div>
+
+  <div class="section">Typography</div>
+
+  <div class="row">
+    <div class="badge">Ff</div>
+    <label>Font</label>
+    <div class="font-picker" id="fontPicker">
+      <div class="fp-trigger" id="fpTrigger">
+        <span id="fpLabel">Site default</span>
+        <span class="fp-caret">▾</span>
+      </div>
+      <div class="fp-list" id="fpList">
+        <div class="fp-option" data-value="" style="font-family:system-ui">Site default</div>
+        <div class="fp-group">System</div>
+        <div class="fp-option" data-value="SF Pro"       style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif">SF Pro</div>
+        <div class="fp-option" data-value="Georgia"      style="font-family:Georgia,serif">Georgia</div>
+        <div class="fp-option" data-value="Palatino"     style="font-family:'Palatino Linotype',Palatino,serif">Palatino</div>
+        <div class="fp-option" data-value="Verdana"      style="font-family:Verdana,sans-serif">Verdana</div>
+        <div class="fp-group">Google Fonts</div>
+        <div class="fp-option" data-value="Lora"         style="font-family:'Lora',Georgia,serif">Lora</div>
+        <div class="fp-option" data-value="Merriweather" style="font-family:'Merriweather',Georgia,serif">Merriweather</div>
+        <div class="fp-option" data-value="Inter"        style="font-family:'Inter',system-ui,sans-serif">Inter</div>
+        <div class="fp-option" data-value="Literata"     style="font-family:'Literata',Georgia,serif">Literata</div>
+      </div>
     </div>
   </div>
 
   <div class="row">
-    <label>Font size</label>
-    <div class="controls">
+    <div class="badge">Aa</div>
+    <label>Size</label>
+    <div class="slider-wrap">
       <input type="range" id="fontSize" min="12" max="24" step="1" />
-      <span class="val" id="fontSizeVal"></span>
     </div>
+    <span class="val" id="fontSizeVal"></span>
   </div>
 
   <div class="row">
+    <div class="badge">↕</div>
     <label>Line height</label>
-    <div class="controls">
+    <div class="slider-wrap">
       <input type="range" id="lineHeight" min="1.2" max="2.4" step="0.05" />
-      <span class="val" id="lineHeightVal"></span>
     </div>
+    <span class="val" id="lineHeightVal"></span>
   </div>
 
   <div class="row">
-    <label>Letter spacing</label>
-    <div class="controls">
+    <div class="badge">⇔</div>
+    <label>Spacing</label>
+    <div class="slider-wrap">
       <input type="range" id="letterSpacing" min="0" max="0.08" step="0.005" />
-      <span class="val" id="letterSpacingVal"></span>
     </div>
+    <span class="val" id="letterSpacingVal"></span>
   </div>
 
   <div class="row">
-    <label>Code font size</label>
-    <div class="controls">
+    <div class="badge">{}</div>
+    <label>Code size</label>
+    <div class="slider-wrap">
       <input type="range" id="codeFontSize" min="10" max="20" step="1" />
-      <span class="val" id="codeFontSizeVal"></span>
     </div>
+    <span class="val" id="codeFontSizeVal"></span>
   </div>
 
   <hr />
