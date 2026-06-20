@@ -32,7 +32,7 @@ let state = { ...DEFAULTS };
 // ── Theme toggle ──────────────────────────────────────────
 // Cycles: system → dark → light → system
 const THEME_CYCLE = ["system", "dark", "light"];
-const THEME_ICONS = { system: "⊙", dark: "☾", light: "☀" };
+const THEME_ICONS = { system: "Auto", dark: "☾", light: "☀" };
 
 function applyTheme(theme) {
   if (theme === "system") {
