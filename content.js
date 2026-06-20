@@ -80,7 +80,7 @@ function applySettings(settings) {
   };
   applyFont(s.fontFamily);
 
-  if (!styleEl) {
+  if (!styleEl || !styleEl.isConnected) {
     styleEl = document.createElement("style");
     styleEl.id = "claude-formatter";
     (document.head || document.documentElement).appendChild(styleEl);
